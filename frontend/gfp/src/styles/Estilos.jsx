@@ -9,7 +9,7 @@ const Estilos = {
         flex: 1,
         with: '100%',
         backgroundColor: corFundo
-    }
+    },
 }
 
 export default Estilos;

@@ -3,13 +3,13 @@ import bcrypt from 'bcrypt'
 
 class rotasSubCategorias {
     static async novaSubCategoria(req, res){
-        const { id_subcategoria, nome, id_categoria, gasto_fixo, ativo } = req.body;
+        const { nome, id_categoria, gasto_fixo } = req.body;
 
         try{
             const subCategoria = await BD.query(`
-                INSERT INTO subcategorias (id_subcategoria, nome, id_categoria, gasto_fixo, ativo )
-                VALUES($1, $2, $3, $4, $5) 
-                `,[id_subcategoria, nome, id_categoria, gasto_fixo, ativo ])
+                INSERT INTO subcategorias ( nome, id_categoria, gasto_fixo  )
+                VALUES($1, $2, $3) 
+                `,[ nome, id_categoria, gasto_fixo  ])
                 res.status(201).json('subCategoria Cadastrado')
         }catch(error){
             console.error('Erro ao criar a subCategoria', error);

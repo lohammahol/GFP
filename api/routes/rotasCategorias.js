@@ -3,13 +3,13 @@ import bcrypt from 'bcrypt'
 
 class rotasCategorias {
     static async novaCategorias(req, res){
-        const { id_categoria, nome, tipo_transacao, gasto_fixo, ativo, id_Usuario } = req.body;
+        const { nome, tipo_transacao, gasto_fixo, ativo, id_usuario, cor, icone } = req.body;
 
         try{
             const categorias = await BD.query(`
-                INSERT INTO categorias (id_categoria, nome, tipo_transacao, gasto_fixo, ativo, id_Usuario)
-                VALUES($1, $2, $3, $4, $5, $6) 
-                `,[id_categoria, nome, tipo_transacao, gasto_fixo, ativo, id_Usuario])
+                INSERT INTO categorias ( nome, tipo_transacao, gasto_fixo, ativo, id_usuario, cor, icone)
+                VALUES($1, $2, $3, $4, $5, $6, $7) 
+                `,[ nome, tipo_transacao, gasto_fixo, ativo, id_usuario, cor, icone])
                 res.status(201).json('Categoria Cadastrado')
         }catch(error){
             console.error('Erro ao criar Categoria', error);
@@ -30,11 +30,11 @@ class rotasCategorias {
 
     static async atualizarTodasCategorias(req, res ){
         const {id_categoria} = req.params
-        const { nome, tipo_transacao, gasto_fixo, ativo, id_Usuario } = req.body
+        const { nome, tipo_transacao, gasto_fixo, ativo, id_usuario, cor, icone } = req.body
     
         try{
-         const usuario = await BD.query('UPDATE categorias SET nome = $2, tipo_transacao = $3, gasto_fixo = $4, ativo = $5 WHERE id_categoria = $6 RETURNING*',
-           [id_categoria, nome, tipo_transacao, gasto_fixo, ativo, id_Usuario]);// comando SQL para atualizar o usuario
+         const usuario = await BD.query('UPDATE categorias SET nome = $1, tipo_transacao = $2, gasto_fixo = $3, ativo = $4 WHERE id_categoria = $5 RETURNING*',
+           [nome, tipo_transacao, gasto_fixo, ativo, id_categoria, cor, icone]);// comando SQL para atualizar o usuario
         res.status(200).json(usuario.rows)
         }catch(error){
          res.status(500).json({message: "Erro ao consultar o usuario", 
@@ -55,8 +55,8 @@ class rotasCategorias {
     }
 
     static async atualizar(req, res){
-        const {id_usuario} = req.params;
-        const { id_categoria, nome, tipo_transacao, gasto_fixo, ativo, id_Usuario } = req.body;
+        const {id_categoria} = req.params;
+        const { nome, tipo_transacao, gasto_fixo, ativo, id_usuario } = req.body;
 
         try{
             //inicializar arrays(vetores) para armazenar os campos e valores a serem atualizar
@@ -84,9 +84,9 @@ class rotasCategorias {
                 campos.push(`ativo = $${valores.length + 1}`)
                 valores.push(ativo); 
             }
-            if(id_Usuario !== undefined){
+            if(id_usuario !== undefined){
                 campos.push(`id_Usuario = $${valores.length + 1}`)
-                valores.push(id_Usuario); 
+                valores.push(id_usuario); 
             }
             if(campos.length === 0){
                 return res.status(400).json({message: "Nenhum campo fornecido para atualização"})
@@ -108,10 +108,30 @@ class rotasCategorias {
             return res.status(200).json(categorias.rows[0]);
         }
         catch(error){
-            res.status(500).json({message: "Erro ao atualizar o ususario", error: error.message})
+            res.status(500).json({message: "Erro ao atualizar o usuario", error: error.message})
         }
     }
+    
+    //filtrar portipo de categoria 
+    static async filtrarCategoria(req, res){
+        // o valor sera enviado por parametro na url, deve ser enviado dessa maneira 
+        // ?tipo_transacao = entrada
+        const { tipo_transacao } = req.query;
+        try{
+            const query = `
+              SELECT * FROM categorias 
+              WHERE tipo_transacao = $1 AND ativo = true
+              ORDER BY id_categoria DESC
+            `
+            const valores = [tipo_transacao]
 
+            const resposta = await BD.query(query,valores)
+            return res.status(200).json(resposta.rows)
+        }catch(error){
+            console.error('Erro ao filtrar categoria', error);
+            res.status(500).json({message: 'Erro ao filtrar categoria', error: error.message})
+        }
+    }
 }
 
 export default rotasCategorias;
