@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import styles from './Login.module.css';
-import logo from '../assets/logo2.png';
+import styles from '../styles/Estilos';
+import logo from '../assets/logo.png';
 import { enderecoServidor } from '../utils'
 import { useNavigate } from 'react-router-dom';
 
 // Import icons (using react-icons as an example)
-// You might need to install it: npm install react-icons
+// You might need to install it: npm instll react-icons
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdBarChart, MdNotifications, MdTrendingUp } from 'react-icons/md';
 
 function Login() {
@@ -48,6 +48,18 @@ function Login() {
       return;
     }
   };
+x
+      useEffect(() => {
+        const buscarUsuarioLogado = async () => {
+            const usuarioLogado = await localStorage.getItem('UsuarioLogado');
+            if (usuarioLogado){
+                const usuario = JSON.parse(usuarioLogado);
+                if (usuario.lembrar == true){
+                    navigate('/principal')
+                }
+            }
+        }
+    },[])
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

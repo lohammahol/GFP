@@ -16,8 +16,8 @@ import Estilos_Login from '../styles/Estilos_login';
 import Estilos, { corPrincipal, corSecundaria, corFundo, corFundo2, corTextos, corTextos2 } from '../styles/Estilos';
 
 const Login = ({ navigation }) => {
-    const [email, setEmail] = useState('douglas.camata@gmail.com');
-    const [senha, setSenha] = useState('123');
+    const [email, setEmail] = useState('gabrielafrica@gmail.com');
+    const [senha, setSenha] = useState('13102006');
     const [showPassword, setShowPassword] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const [lembrar, setLembrar] = useState(false);
@@ -30,6 +30,8 @@ const Login = ({ navigation }) => {
                 if (usuario.lembrar == true){
                     navigation.navigate('MenuDrawer')
                 }
+            } else {
+                navigation.navigate('Login');
             }
         }
     },[])
@@ -152,7 +154,7 @@ const Login = ({ navigation }) => {
 
                     <View style={Estilos_Login.forgotPasswordContainer}>
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Switch value={lembrar} onValueChange={!setLembrar}/>
+                            <Switch value={lembrar} onValueChange={setLembrar}/>
                             <Text>lembrar-me</Text>
                         </View>
 

@@ -20,7 +20,7 @@ class rotasConta {
 
     static async leituraLConta(req, res ){
         try{
-            const contas = await BD.query('SELECT * FROM contas');
+            const contas = await BD.query('SELECT * FROM contas where ativo = true');
            return res.status(200).json(contas.rows); 
         }catch(error){
             res.status(500).json({message:
